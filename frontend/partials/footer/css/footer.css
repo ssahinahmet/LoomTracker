@@ -1,0 +1,135 @@
+:root {
+  --bg-color: #0a0a0a;
+  --primary-color: #ffffff;
+  --primary-color-light: #a64dff;
+  --text-color: #d3d3d3;
+  --text-muted: #5a5a5a;
+  --input-bg: #1e1e1e;
+  --input-border: rgb(74, 20, 140);
+  --input-focus: #9c27b0;
+  --btn-bg: #7f00ff;
+  --btn-bg-hover: #a64dff;
+  --shadow-color: rgba(127, 0, 255, 0.6);
+
+  /* EKSİK DEĞİŞKENLERİ BURAYA EKLİYORUM */
+  --accent-color: #a64dff;
+  --hover-color: rgba(166, 77, 255, 0.4);
+  --footer-padding: 2rem;
+  --footer-gap: 2rem;
+}
+
+.footer {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  padding: var(--footer-padding);
+  box-sizing: border-box;
+  border-top: 3px solid var(--accent-color);
+  font-family: 'Rubik', sans-serif;
+  font-size: 0.9rem;
+  width: 100%;
+  box-shadow: 0 0 4px 2px var(--hover-color);
+}
+
+.footer-top {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--footer-gap);
+  padding-bottom: 1rem;
+}
+
+.footer-left,
+.footer-right {
+  flex: 0 0 250px;
+  min-width: 200px;
+}
+
+.footer-center {
+  flex: 1;
+}
+
+.footer-center img {
+  height: 80px;
+  user-select: none;
+}
+
+.footer-left h3,
+.footer-right h4 {
+  color: var(--accent-color);
+  margin-bottom: 0.75rem;
+}
+
+.footer-right ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-left {
+  flex-basis: 36%;
+  padding: 5px 5px;
+  box-sizing: border-box;
+}
+
+.footer-left p {
+  font-size: 0.7rem;
+  max-width: 100%;
+  margin: 0;
+  word-wrap: break-word;
+}
+
+.footer-right ul li {
+  margin-bottom: 0.5rem;
+}
+
+.footer-right ul li a {
+  color: var(--text-color);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-right ul li a:hover,
+.footer-right ul li a:focus {
+  color: var(--accent-color);
+  outline: none;
+}
+
+.footer-divider {
+  border: none;
+  border-top: 1px solid var(--accent-color);
+  margin: 1.5rem auto;
+  max-width: 90%;
+  width: 90%;
+}
+
+.footer-bottom {
+  text-align: center;
+  color: var(--accent-color);
+  font-weight: 600;
+  font-size: 0.85rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Mobil düzenleme */
+@media (max-width: 768px) {
+  .footer-top {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .footer-left,
+  .footer-right {
+    flex: none;
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .footer-center {
+    display: none;
+  }
+}

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <title>LoomTracker - Profile</title>
+
+  <!-- Stil Dosyaları -->
+  <link rel="stylesheet" href="css/profile.css" />
+  <link rel="stylesheet" href="./partials/navbar/css/navbar.css" />
+  <link rel="stylesheet" href="partials/footer/css/footer.css" />
+
+  <link rel="icon" href="./minahalilogoaltinlogo.png" type="image/png" />
+
+  <!-- Meta Mobil Uyumluluk -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- CSS Değişkenleri: Backend üzerinden alınan değerlerle güncellenecek -->
+  <style>
+    :root {
+      /* Temel Renkler */
+      --bg-color: #0a0a0a;
+      --primary-color: #ffffff;
+      --primary-color-light: #a64dff;
+      --text-color: #d3d3d3;
+      --text-muted: #5a5a5a;
+
+      /* Arkaplanlar ve Kenarlıklar */
+      --input-bg: #1e1e1e;
+      --input-border: rgb(74, 20, 140);
+      --border-color: #333;
+      --table-header-bg: #2a2a2a;
+      --table-row-even-bg: #242424;
+
+      /* Buton ve Efektler */
+      --btn-bg: #7f00ff;
+      --btn-bg-hover: #a64dff;
+      --input-focus: #9c27b0;
+      --shadow-color: rgba(127, 0, 255, 0.6);
+      --box-shadow: rgba(166, 77, 255, 0.3);
+
+      /* Modal */
+      --modal-overlay: rgba(10, 10, 10, 0.9);
+      --close-button-bg: #a64dff;
+      --close-button-hover: #c084ff;
+    }
+
+</style>
+</head>
+<body>
+  <div id="navbar-placeholder"></div>
+  <main>
+    <h1>Atkı Kayıtlarım</h1>
+    <div class="table-wrapper">
+      <table id="recordsTable" style="display: none;">
+        <thead>
+          <tr>
+            <th>Tarih</th>
+            <th>Vardiya</th>
+            <th>Tezgah No</th>
+            <th>Atkı Sıklığı</th>
+            <th>Atkı</th>
+            <th>Devir</th>
+            <th>Fotoğraf</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div id="error-message" role="alert"></div>
+  </main>
+  <div id="footer-placeholder"></div>
+
+  <div id="photoModal" class="modal">
+    <div class="modal-content">
+      <span class="close-button" onclick="closeModal()">×</span>
+      <img id="modalImage" src="" alt="Fotoğraf" />
+    </div>
+  </div>
+
+  <script>
+    const backendBaseUrl = 'http://45.150.149.84:5000';
+  
+    function toKebabCase(str) {
+      return str.replace(/[A-Z]/g, m => '-' + m.toLowerCase());
+    }
+  
+    async function applySiteSettingsToPage() {
+      try {
+        const res = await fetch("http://45.150.149.84:5000/api/site-settings");
+        if (!res.ok) throw new Error("Site ayarları yüklenemedi: " + res.status);
+        const data = await res.json();
+  
+        // Title güncelle
+        if (data.firmaAdi) {
+          document.title = `${data.firmaAdi} - Profile`;
+        }
+  
+        // Renkleri uygula
+        if (data.colors) {
+          const root = document.documentElement;
+          for (const key in data.colors) {
+            if (data.colors[key]) {
+              const cssVarName = `--${key.replace(/([A-Z])/g, "-$1").toLowerCase()}`;
+              root.style.setProperty(cssVarName, data.colors[key]);
+            }
+          }
+        }
+      } catch (e) {
+        console.warn("Site ayarları uygulanamadı:", e);
+      }
+    }
+  
+  
+    async function loadRecords() {
+      const pin = localStorage.getItem('pin');
+      if (!pin) {
+        document.body.innerHTML = 'Giriş yapılmamış. Lütfen önce giriş yap.';
+        return;
+      }
+  
+      try {
+        const res = await fetch(`${backendBaseUrl}/api/profile-records?pin=${encodeURIComponent(pin)}`);
+        if (!res.ok) throw new Error('Kayıtlar alınamadı.');
+        const data = await res.json();
+  
+        const recordsTable = document.getElementById('recordsTable');
+        const tbody = recordsTable.querySelector('tbody');
+        const errorMessage = document.getElementById('error-message');
+  
+        if (!data.length) {
+          errorMessage.textContent = 'Kayıt bulunamadı.';
+          recordsTable.style.display = 'none';
+          return;
+        }
+  
+        errorMessage.textContent = '';
+        recordsTable.style.display = 'table';
+  
+        tbody.innerHTML = data.map(record => {
+          const tarih = new Date(record.tarih).toLocaleDateString('tr-TR');
+          const photoLink = record.photoFilename
+            ? `<a href="#" onclick="openModal('${backendBaseUrl}/uploads/${record.photoFilename}'); return false;">Görüntüle</a>`
+            : '-';
+  
+          return `<tr>
+            <td>${tarih}</td>
+            <td>${record.vardiya}</td>
+            <td>${record.tezgah_no}</td>
+            <td>${record.atki_sikligi.toFixed(2)}</td>
+            <td>${record.atki}</td>
+            <td>${record.devir}</td>
+            <td>${photoLink}</td>
+          </tr>`;
+        }).join('');
+      } catch (err) {
+        document.getElementById('error-message').textContent = `Hata: ${err.message}`;
+      }
+    }
+  
+    function openModal(imageUrl) {
+      const modal = document.getElementById('photoModal');
+      const modalImg = document.getElementById('modalImage');
+      modalImg.src = imageUrl;
+      modal.style.display = 'flex';
+    }
+  
+    function closeModal() {
+      const modal = document.getElementById('photoModal');
+      modal.style.display = 'none';
+      document.getElementById('modalImage').src = '';
+    }
+  
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') closeModal();
+    });
+  
+    function loadNavbarFooter() {
+      fetch('partials/navbar/navbar.html')
+        .then(r => r.text())
+        .then(html => {
+          document.getElementById('navbar-placeholder').innerHTML = html;
+        })
+        .catch(err => console.error('Navbar yüklenirken hata:', err));
+  
+      fetch('partials/footer/footer.html')
+        .then(r => r.text())
+        .then(html => {
+          document.getElementById('footer-placeholder').innerHTML = html;
+        })
+        .catch(err => console.error('Footer yüklenirken hata:', err));
+    }
+  
+    document.addEventListener('DOMContentLoaded', () => {
+      applySiteSettingsToPage();
+      loadRecords();
+      loadNavbarFooter();
+    });
+  </script>
+  
+  <script src="javascript/security.js"></script>
+</body>
+</html>
