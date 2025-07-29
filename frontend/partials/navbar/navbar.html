@@ -1,23 +1,37 @@
-<nav role="navigation" aria-label="Ana Menü">
-  <div class="logo" aria-label="Minahalı Logo" tabindex="0">
-    <img src="../../images/minahalilogoaltinlogo.png" alt="Minahalı Logo" style="height: 40px; user-select: none;" />
-  </div>
-  <button
-    class="hamburger"
-    aria-label="Menüyü aç/kapat"
-    aria-expanded="false"
-    aria-controls="main-menu"
-    tabindex="0"
-    type="button"
-  >
-    <span></span>
-    <span></span>
-    <span></span>
-  </button>
-  <div class="menu" id="main-menu" hidden>
-    <a href="../../index.html" class="veri-analiz" tabindex="0">Veri Girişi</a>
-    <a href="../../analiz.html" class="veri-analiz" tabindex="0">Analiz</a>
-    <a href="../../profile.html" class="veri-analiz" tabindex="0">Profil</a>
-    <a href="../../login.html" class="cikis-yap" tabindex="0">Çıkış Yap</a>
+<!-- HTML - navbar.html -->
+
+<nav class="minahali-navbar" role="navigation" aria-label="Ana navigasyon">
+  <div class="minahali-navbar-container">
+      <!-- Logo -->
+      <div class="minahali-navbar-logo">
+        <a href="../../index.html" aria-label="Ana Sayfa">
+          <img src="../../images/minahalilogoaltinlogo.png" alt="Minahalı Logo" class="minahali-logo-img" />
+        </a>
+      </div>
+      
+
+      <!-- Desktop Menü -->
+      <ul class="minahali-navbar-menu" id="minahali-navbar-menu">
+          <li class="minahali-navbar-item">
+              <a href="../../index.html" class="minahali-navbar-link minahali-veri-analiz">Veri Girişi</a>
+          </li>
+          <li class="minahali-navbar-item">
+              <a href="../../analiz.html" class="minahali-navbar-link minahali-veri-analiz">Analiz</a>
+          </li>
+          <li class="minahali-navbar-item">
+              <a href="../../profile.html" class="minahali-navbar-link minahali-veri-analiz">Profil</a>
+          </li>
+          <li class="minahali-navbar-item">
+              <a href="../../login.html" class="minahali-navbar-link minahali-cikis-yap">Çıkış Yap</a>
+          </li>
+      </ul>
+
+      <!-- Hamburger Button -->
+      <button class="minahali-navbar-toggle" id="minahali-navbar-toggle" 
+              aria-label="Menüyü aç/kapat" aria-expanded="false" type="button">
+          <div class="minahali-hamburger-line"></div>
+          <div class="minahali-hamburger-line"></div>
+          <div class="minahali-hamburger-line"></div>
+      </button>
   </div>
 </nav>

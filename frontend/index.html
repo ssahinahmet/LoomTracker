@@ -11,7 +11,6 @@
   <!-- Stil dosyaları -->
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="partials/navbar/css/navbar.css" />
-  <link rel="stylesheet" href="partials/footer/css/footer.css" />
 
   <style>
     /* Tema renk değişkenleri */
@@ -130,7 +129,11 @@
         />
 
         <!-- Duruş Süresi gösterimi -->
-        <div>Duruş Süre: <span id="durus_suresi_display">-- dk</span></div>
+        <div>Duruş Süre: <span id="durus_suresi_display">0 dk</span></div>
+
+        <label for="not">Not (opsiyonel):</label>
+        <textarea id="not" name="not" maxlength="300" rows="4" cols="40" placeholder="Ek açıklama, gözlem vb."></textarea>
+      
 
         <!-- Üretim Fotoğrafı (Zorunlu) -->
         <label for="photo">Üretim Fotoğrafı (Zorunlu):</label>

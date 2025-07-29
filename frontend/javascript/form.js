@@ -6,6 +6,7 @@ const durusSelect = document.getElementById('durus_nedeni');
 const durusYeniInput = document.getElementById('durus_nedeni_yeni');
 const operatorInput = document.getElementById('operator');
 const photoInput = document.getElementById('photo');
+const tarihInput = document.getElementById('tarih'); // Tarih inputu referansı
 const apiUrl = "http://45.150.149.84:5000/api/records";
 
 // Giriş yapılmış mı kontrol et
@@ -56,7 +57,7 @@ function hesaplaDurusSuresi() {
   const atki = parseFloat(atkiInput.value);
 
   if (isNaN(devir) || isNaN(atki) || devir <= 0) {
-    durusSureDisplay.textContent = "-- dk";
+    durusSureDisplay.textContent = "0 dk";
     return;
   }
 
@@ -103,9 +104,23 @@ atkiInput.addEventListener('input', hesaplaDurusSuresi);
 // Sayfa yüklendiğinde operatör adını set et
 setOperatorInput();
 
+// Tarih inputunun min değerini bugüne ayarla
+if (tarihInput) {
+  const today = new Date().toISOString().split('T')[0];
+  tarihInput.setAttribute('min', today);
+}
+
 // Form gönderimi
 document.getElementById("recordForm").addEventListener("submit", async (e) => {
   e.preventDefault();
+
+  // Tarih geçmiş mi kontrol et
+  const tarihValue = tarihInput.value;
+  const today = new Date().toISOString().split('T')[0];
+  if (!tarihValue || tarihValue < today) {
+    showFormResult("Geçmiş tarihe izin verilmiyor.", false);
+    return;
+  }
 
   if (!photoInput.files || photoInput.files.length === 0) {
     showFormResult("Üretim fotoğrafı zorunludur.", false);
@@ -118,7 +133,7 @@ document.getElementById("recordForm").addEventListener("submit", async (e) => {
   // Duruş süresi
   const sureText = durusSureDisplay.textContent;
   let sureValue = 0;
-  if (sureText && sureText !== "-- dk") {
+  if (sureText && sureText !== "0 dk") {
     sureValue = parseInt(sureText.replace(" dk", ""));
   }
   formData.set('sure', sureValue);
@@ -178,7 +193,7 @@ document.getElementById("recordForm").addEventListener("submit", async (e) => {
       showFormResult("Kayıt başarıyla oluşturuldu ✅", true);
       form.reset();
       durusYeniInput.style.display = "none";
-      durusSureDisplay.textContent = "-- dk";
+      durusSureDisplay.textContent = "0 dk";
       setOperatorInput();
     } else {
       showFormResult("Hata: " + (json.error || "Bilinmeyen hata"), false);
@@ -194,5 +209,3 @@ function showFormResult(msg, success) {
   el.textContent = msg;
   el.className = "result-message " + (success ? "success" : "error");
 }
-
-

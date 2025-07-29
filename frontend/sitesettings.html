@@ -4,9 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Site Ayarları</title>
-
   <link rel="stylesheet" href="partials/navbar/css/navbar.css" />
-  <link rel="stylesheet" href="partials/footer/css/footer.css" />
+
   <style>
     :root {
       --bg-color: #0a0a0a;
@@ -134,6 +133,11 @@
       font-weight: 700;
     }
 
+    /* Tezgah eni inputları için container */
+    #tezgahlarContainer > div {
+      margin-bottom: 12px;
+    }
+
     /* Responsive ayarları */
     @media (max-width: 480px) {
       form {
@@ -159,6 +163,9 @@
 
       <label for="tezgahSayisi">Tezgah Sayısı:</label>
       <input type="number" id="tezgahSayisi" name="tezgahSayisi" min="1" required />
+
+      <!-- Tezgah eni inputları buraya eklenecek -->
+      <div id="tezgahlarContainer"></div>
 
       <label for="vardiyalar">Vardiyalar (virgülle ayırınız):</label>
       <input
@@ -230,6 +237,48 @@
       }
     }
 
+    // Tezgahlar için inputları render eden fonksiyon
+    function renderTezgahInputs(tezgahSayisi, tezgahlarData = []) {
+      const container = document.getElementById('tezgahlarContainer');
+      container.innerHTML = ''; // Temizle
+
+      for (let i = 1; i <= tezgahSayisi; i++) {
+        const found = tezgahlarData.find((t) => t.no === i);
+        const eniValue = found ? found.eni : 4; // Default 4 metre
+
+        const wrapper = document.createElement('div');
+
+        const label = document.createElement('label');
+        label.htmlFor = `tezgahEni${i}`;
+        label.textContent = `Tezgah ${i} Eni (metre):`;
+        label.style.fontWeight = '600';
+        label.style.color = 'var(--primary-color)';
+        label.style.display = 'block';
+
+        const input = document.createElement('input');
+        input.type = 'number';
+        input.min = '0.1';
+        input.step = '0.1';
+        input.id = `tezgahEni${i}`;
+        input.name = `tezgahEni${i}`;
+        input.value = eniValue;
+        input.required = true;
+        input.style.width = '100%';
+        input.style.padding = '10px 12px';
+        input.style.background = 'var(--input-bg)';
+        input.style.border = '1.5px solid var(--input-border)';
+        input.style.color = 'var(--text-color)';
+        input.style.borderRadius = '6px';
+        input.style.fontSize = '1rem';
+        input.style.fontFamily = 'inherit';
+
+        wrapper.appendChild(label);
+        wrapper.appendChild(input);
+
+        container.appendChild(wrapper);
+      }
+    }
+
     // Ayarları API'den çek ve forma doldur
     async function fetchSettings() {
       try {
@@ -241,6 +290,12 @@
         document.getElementById('firmaAdi').value = data.firmaAdi || '';
         document.getElementById('tezgahSayisi').value = data.tezgahSayisi || 1;
         document.getElementById('vardiyalar').value = (data.vardiyalar || []).join(',');
+
+        if (data.tezgahlar && data.tezgahlar.length) {
+          renderTezgahInputs(data.tezgahSayisi, data.tezgahlar);
+        } else {
+          renderTezgahInputs(data.tezgahSayisi || 1);
+        }
 
         if (data.colors) {
           for (const [key, value] of Object.entries(data.colors)) {
@@ -277,14 +332,33 @@
     document.getElementById('settingsForm').addEventListener('submit', async (e) => {
       e.preventDefault();
 
+      const tezgahSayisi = Number(document.getElementById('tezgahSayisi').value);
+
+      // Tezgahlar dizisini topla
+      const tezgahlar = [];
+      for (let i = 1; i <= tezgahSayisi; i++) {
+        const eniInput = document.getElementById(`tezgahEni${i}`);
+        if (!eniInput) {
+          alert(`Tezgah ${i} eni bilgisi eksik!`);
+          return;
+        }
+        const eni = parseFloat(eniInput.value);
+        if (isNaN(eni) || eni < 0.1) {
+          alert(`Tezgah ${i} eni geçerli bir sayı olmalı ve 0.1'den küçük olamaz.`);
+          return;
+        }
+        tezgahlar.push({ no: i, eni });
+      }
+
       const formData = {
         firmaAdi: document.getElementById('firmaAdi').value.trim(),
-        tezgahSayisi: Number(document.getElementById('tezgahSayisi').value),
+        tezgahSayisi,
         vardiyalar: document
           .getElementById('vardiyalar')
           .value.split(',')
           .map((v) => v.trim())
           .filter(Boolean),
+        tezgahlar,
         colors: {
           bgColor: document.getElementById('bgColor').value.trim(),
           primaryColor: document.getElementById('primaryColor').value.trim(),
@@ -301,6 +375,14 @@
       };
 
       await saveSettings(formData);
+    });
+
+    // Tezgah sayısı inputu değiştiğinde tezgah eni inputlarını güncelle
+    document.getElementById('tezgahSayisi').addEventListener('input', (e) => {
+      const count = Number(e.target.value);
+      if (count > 0) {
+        renderTezgahInputs(count);
+      }
     });
 
     // Admin kontrolü - localStorage'dan role'u kontrol et

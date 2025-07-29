@@ -136,7 +136,7 @@ function hesaplaDurusSuresi() {
   const y = parseFloat(atkiInput.value);
 
   if (isNaN(devir) || isNaN(y) || devir <= 0) {
-    durusSureDisplay.textContent = "-- dk";
+    durusSureDisplay.textContent = "0 dk";
     return;
   }
 

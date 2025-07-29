@@ -10,7 +10,8 @@ const authRoutes = require('./routes/authRoutes');
 const makinistRoutes = require('./routes/makinistRoutes');
 const profileRoutes = require('./routes/profileRoutes');
 const siteSettingsRoutes = require('./routes/siteSettingsRoutes');
-const themeRoutes = require('./routes/themeRoutes'); // <-- RENK teması için yeni route
+const themeRoutes = require('./routes/themeRoutes'); 
+
 
 const app = express();
 

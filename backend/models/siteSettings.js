@@ -1,9 +1,33 @@
 const mongoose = require('mongoose');
 
+const tezgahSchema = new mongoose.Schema({
+  no: { type: Number, required: true },          // Tezgah numarası (1, 2, 3...)
+  eni: { type: Number, required: true, min: 0.1 } // Tezgah genişliği (metre cinsinden)
+});
+
 const siteSettingsSchema = new mongoose.Schema({
   firmaAdi: { type: String, required: true, default: 'Pizza Development' },
   tezgahSayisi: { type: Number, default: 3 },
-  vardiyalar: { type: [String], default: ['07:00-15:00', '15:00-23:00', '23:00-07:00'] },
+
+  vardiyalar: {
+    type: [String],
+    required: true
+  },
+
+  tezgahlar: {
+    type: [tezgahSchema],
+    default: [
+      { no: 1, eni: 4 },
+      { no: 2, eni: 4 },
+      { no: 3, eni: 4 }
+    ],
+    validate: {
+      validator: function (v) {
+        return v.length === this.tezgahSayisi;
+      },
+      message: props => `tezgahlar dizisinin uzunluğu (${props.value.length}) tezgahSayisi (${this.tezgahSayisi}) ile aynı olmalı!`
+    }
+  },
 
   colors: {
     bgColor: { type: String, default: '#0a0a0a' },

@@ -1,9 +1,8 @@
 const Record = require('../models/Record');
+const SiteSettings = require('../models/siteSettings'); // Dinamik tezgah eni için
 const path = require('path');
 const fs = require('fs').promises;
 const { v4: uuidv4 } = require('uuid');
-
-const TEZGAH_ENI = 4; // Tezgah eni metre cinsinden
 
 /**
  * Duruş süresi hesaplama fonksiyonu
@@ -36,7 +35,8 @@ exports.createRecord = async (req, res) => {
       devir,
       atki,
       atki_sikligi,
-      durus_nedeni
+      durus_nedeni,
+      not         // buraya eklendi
     } = req.body;
 
     // Zorunlu alan kontrolü (userId ve operator_id yok)
@@ -49,11 +49,17 @@ exports.createRecord = async (req, res) => {
       return res.status(400).json({ error: 'Geçersiz tarih formatı.' });
     }
 
-    // Vardiya kontrolü (sadece belirlenen 3 vardiya kabul edilir)
-    const validVardiyalar = ['07:00-15:00', '15:00-23:00', '23:00-07:00'];
+    // Site ayarları sadece 1 kez çekiliyor
+    const siteSettings = await SiteSettings.findOne({});
+    if (!siteSettings) {
+      return res.status(500).json({ error: 'Site ayarları bulunamadı.' });
+    }
+
+    const validVardiyalar = siteSettings.vardiyalar || [];
     if (!validVardiyalar.includes(vardiya)) {
       return res.status(400).json({ error: `Vardiya geçersiz. Seçenekler: ${validVardiyalar.join(', ')}` });
     }
+    
 
     // Sayısal alanlar dönüşümü ve validasyonu
     devir = Number(devir);
@@ -64,8 +70,23 @@ exports.createRecord = async (req, res) => {
     if (isNaN(atki) || atki < 0) return res.status(400).json({ error: 'Atkı pozitif sayı olmalı.' });
     if (isNaN(atki_sikligi) || atki_sikligi <= 0) return res.status(400).json({ error: 'Atkı sıklığı pozitif sayı olmalı.' });
 
+    // Tezgah bilgileri doğrulaması
+    if (!Array.isArray(siteSettings.tezgahlar)) {
+      return res.status(500).json({ error: 'Tezgah bilgileri bulunamadı.' });
+    }
+
+    const tezgahNoInt = Number(tezgah_no);
+    const tezgahObj = siteSettings.tezgahlar.find(t => t.no === tezgahNoInt);
+    if (!tezgahObj) {
+      return res.status(400).json({ error: 'Seçilen tezgah geçersiz.' });
+    }
+    const tezgahEni = tezgahObj.eni;
+    if (typeof tezgahEni !== 'number' || tezgahEni <= 0) {
+      return res.status(500).json({ error: 'Tezgah eni geçersiz.' });
+    }
+
     // m² hesabı (atkı sayısı / (atkı sıklığı * 10) * tezgah eni * 2)
-    const m2 = (atki / (atki_sikligi * 10)) * (TEZGAH_ENI * 2);
+    const m2 = (atki / (atki_sikligi * 10)) * (tezgahEni * 2);
     if (m2 < 0) return res.status(400).json({ error: 'Hesaplanan metrekare negatif, verileri kontrol edin.' });
 
     // Duruş süresi hesaplama
@@ -82,7 +103,8 @@ exports.createRecord = async (req, res) => {
       atki_sikligi,
       durus_nedeni: durus_nedeni || null,
       durus_suresi,
-      m2
+      m2,
+      not: not ? not.trim() : null  // not alanı eklendi
     });
 
     // Eğer dosya varsa izin kontrolü ve taşınması
@@ -184,7 +206,6 @@ exports.getOperatorSummary = async (req, res) => {
  * --- ÜRETİM ANALİZ FONKSİYONLARI ---
  * Tezgah bazlı, vardiya bazlı, personel bazlı üretim, duruş süreleri vb.
  */
-
 exports.getTezgahUretim = async (req, res) => {
   try {
     const sonuc = await Record.aggregate([

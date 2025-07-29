@@ -1,12 +1,12 @@
 :root {
-  /* Temel Renkler */
+  /* Tema Renkleri */
   --bg-color: #0a0a0a;
   --primary-color: #ffffff;
   --primary-color-light: #a64dff;
   --text-color: #d3d3d3;
   --text-muted: #5a5a5a;
 
-  /* Arkaplanlar ve Kenarlıklar */
+  /* Arka Planlar ve Kenarlıklar */
   --input-bg: #1e1e1e;
   --input-border: rgb(74, 20, 140);
   --border-color: #333;
@@ -20,12 +20,13 @@
   --shadow-color: rgba(127, 0, 255, 0.6);
   --box-shadow: rgba(166, 77, 255, 0.3);
 
-  /* Modal */
+  /* Modal Ayarları */
   --modal-overlay: rgba(10, 10, 10, 0.9);
   --close-button-bg: #a64dff;
   --close-button-hover: #c084ff;
 }
 
+/* GENEL YAPI */
 html, body {
   background-color: var(--bg-color);
   height: 100%;
@@ -38,11 +39,7 @@ html, body {
 }
 
 main {
-  background-color: var(--bg-color);
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
   padding: 2rem;
   max-width: 1000px;
   margin: 0 auto;
@@ -57,13 +54,11 @@ h1 {
   border-bottom: 2px solid var(--primary-color-light);
   padding-bottom: 0.5rem;
   text-align: center;
-  width: 100%;
 }
 
+/* TABLO STİLİ */
 .table-wrapper {
-  width: 100%;
   overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
   box-shadow: 0 0 10px var(--box-shadow);
   border-radius: 8px;
   background-color: var(--input-bg);
@@ -113,6 +108,8 @@ a:hover {
   font-size: 1.1rem;
 }
 
+/* MODAL GENEL */
+/* === GENEL MODAL === */
 .modal {
   position: fixed;
   top: 0; left: 0;
@@ -121,50 +118,85 @@ a:hover {
   display: none;
   align-items: center;
   justify-content: center;
-  z-index: 999;
+  z-index: 1000;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
-.modal-content {
-  position: relative;
-  max-width: 95%;
-  max-height: 85%;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-}
-
-.modal-content img {
-  width: 100%;
-  height: auto;
-  max-height: 100%;
-  display: block;
-}
-
-.close-button {
-  position: fixed;
-  top: 12px;
-  right: 12px;
-  background: var(--close-button-bg);
-  color: white;
-  border: none;
-  font-size: 28px;
-  font-weight: bold;
-  cursor: pointer;
-  border-radius: 50%;
-  width: 44px;
-  height: 44px;
+/* === FOTO MODAL === */
+#photoModal {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
-  box-shadow: 0 0 8px var(--box-shadow);
-  transition: background 0.3s ease;
+  background-color: var(--bg-color);
+  padding: 10px;
+  border: 2px solid var(--primary-color-light);
+  box-shadow: 0 0 15px var(--shadow-color);
+  border-radius: 8px;
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow: auto;
 }
 
+#photoModal img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 80vh;
+  object-fit: contain;
+  border-radius: 6px;
+}
+
+/* === NOTE MODAL === */
+#noteModal {
+  max-width: 90%;
+  width: 400px;
+  max-height: 60vh;
+  overflow-y: auto;
+  background-color: var(--input-bg);
+  border: 1px solid var(--input-border);
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px var(--shadow-color);
+  color: var(--text-color);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* === SCROLLBAR (isteğe bağlı) === */
+#noteModal::-webkit-scrollbar {
+  width: 6px;
+}
+#noteModal::-webkit-scrollbar-thumb {
+  background: var(--input-focus);
+  border-radius: 10px;
+}
+
+/* === MODAL KAPATMA BUTONU === */
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: var(--close-button-bg);
+  color: white;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 8px var(--box-shadow);
+}
 .close-button:hover {
   background: var(--close-button-hover);
 }
 
+
+/* RESPONSIVE */
 @media (max-width: 768px) {
   main {
     padding: 1.5rem 1rem;
@@ -177,6 +209,11 @@ a:hover {
   thead th, tbody td {
     padding: 10px 6px;
     font-size: 1rem;
+  }
+
+  .modal-content.note-modal {
+    max-width: 90%;
+    font-size: 0.95rem;
   }
 }
 
@@ -199,10 +236,8 @@ a:hover {
   }
 
   .close-button {
-    width: 38px;
-    height: 38px;
-    font-size: 24px;
-    top: 10px;
-    right: 10px;
+    width: 32px;
+    height: 32px;
+    font-size: 20px;
   }
 }

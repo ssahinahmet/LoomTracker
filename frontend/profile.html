@@ -6,47 +6,46 @@
 
   <!-- Stil Dosyaları -->
   <link rel="stylesheet" href="css/profile.css" />
-  <link rel="stylesheet" href="./partials/navbar/css/navbar.css" />
-  <link rel="stylesheet" href="partials/footer/css/footer.css" />
+  <link rel="stylesheet" href="partials/navbar/css/navbar.css" />
 
   <link rel="icon" href="./minahalilogoaltinlogo.png" type="image/png" />
 
   <!-- Meta Mobil Uyumluluk -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- CSS Değişkenleri: Backend üzerinden alınan değerlerle güncellenecek -->
+  <!-- CSS Değişkenleri: Backend’den dinamik alınan tema renkleri için -->
   <style>
     :root {
-      /* Temel Renkler */
+      /* Temel renkler */
       --bg-color: #0a0a0a;
       --primary-color: #ffffff;
       --primary-color-light: #a64dff;
       --text-color: #d3d3d3;
       --text-muted: #5a5a5a;
 
-      /* Arkaplanlar ve Kenarlıklar */
+      /* Arkaplanlar ve kenarlıklar */
       --input-bg: #1e1e1e;
       --input-border: rgb(74, 20, 140);
       --border-color: #333;
       --table-header-bg: #2a2a2a;
       --table-row-even-bg: #242424;
 
-      /* Buton ve Efektler */
+      /* Buton ve efektler */
       --btn-bg: #7f00ff;
       --btn-bg-hover: #a64dff;
       --input-focus: #9c27b0;
       --shadow-color: rgba(127, 0, 255, 0.6);
       --box-shadow: rgba(166, 77, 255, 0.3);
 
-      /* Modal */
+      /* Modal renkleri */
       --modal-overlay: rgba(10, 10, 10, 0.9);
       --close-button-bg: #a64dff;
       --close-button-hover: #c084ff;
     }
-
-</style>
+  </style>
 </head>
 <body>
+  <!-- Navbar ve Footer için placeholder -->
   <div id="navbar-placeholder"></div>
   <main>
     <h1>Atkı Kayıtlarım</h1>
@@ -61,6 +60,7 @@
             <th>Atkı</th>
             <th>Devir</th>
             <th>Fotoğraf</th>
+            <th>Not</th> <!-- Yeni eklenen Not sütunu -->
           </tr>
         </thead>
         <tbody></tbody>
@@ -70,32 +70,46 @@
   </main>
   <div id="footer-placeholder"></div>
 
-  <div id="photoModal" class="modal">
-    <div class="modal-content">
-      <span class="close-button" onclick="closeModal()">×</span>
-      <img id="modalImage" src="" alt="Fotoğraf" />
-    </div>
+  <!-- Fotoğraf modalı -->
+  <div id="photoModal" class="modal" style="display:none; position:fixed; top:50%; left:50%; transform: translate(-50%, -50%);
+    background-color: var(--bg-color); border: 2px solid var(--primary-color-light); padding: 15px; z-index: 1001; max-width: 600px; box-shadow: 0 0 15px var(--shadow-color);">
+    <span class="close-button" onclick="closePhotoModal()" style="cursor:pointer; float:right; font-size:24px; color:var(--primary-color);">&times;</span>
+    <img id="modalImage" src="" alt="Fotoğraf" style="max-width: 100%; height: auto; display: block; margin: 0 auto;" />
+  </div>
+  <div id="modalOverlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh;
+    background: var(--modal-overlay); z-index:1000;"></div>
+
+  <!-- Not modalı -->
+  <div id="noteModal" class="modal" style="display:none; position:fixed; top:50%; left:50%; transform: translate(-50%, -50%);
+    background-color: var(--bg-color); border: 2px solid var(--primary-color-light); padding: 20px; z-index: 1002; max-width: 400px; box-shadow: 0 0 15px var(--shadow-color);">
+    <button aria-label="Kapat" onclick="closeNoteModal()" style="float:right; background-color: var(--close-button-bg);
+      border:none; color:white; font-size: 20px; cursor:pointer; padding: 2px 8px;">×</button>
+    <h2 style="color: var(--primary-color-light); margin-top: 0;">Not</h2>
+    <p id="noteContent" style="white-space: pre-wrap; color: var(--primary-color);"></p>
   </div>
 
+  <!-- JavaScript -->
   <script>
     const backendBaseUrl = 'http://45.150.149.84:5000';
-  
+
+    // CamelCase to kebab-case CSS değişken ismi dönüştürme (backend renkleri için)
     function toKebabCase(str) {
       return str.replace(/[A-Z]/g, m => '-' + m.toLowerCase());
     }
-  
+
+    // Backend'den site ayarlarını çek ve sayfaya uygula (başlık ve renkler)
     async function applySiteSettingsToPage() {
       try {
-        const res = await fetch("http://45.150.149.84:5000/api/site-settings");
+        const res = await fetch(`${backendBaseUrl}/api/site-settings`);
         if (!res.ok) throw new Error("Site ayarları yüklenemedi: " + res.status);
         const data = await res.json();
-  
-        // Title güncelle
+
+        // Sayfa başlığı güncelle
         if (data.firmaAdi) {
           document.title = `${data.firmaAdi} - Profile`;
         }
-  
-        // Renkleri uygula
+
+        // Tema renklerini CSS değişkenlerine uygula
         if (data.colors) {
           const root = document.documentElement;
           for (const key in data.colors) {
@@ -109,39 +123,59 @@
         console.warn("Site ayarları uygulanamadı:", e);
       }
     }
-  
-  
+
+    // HTML özel karakter kaçış fonksiyonu (XSS önlemek için)
+    function escapeHtml(text) {
+      if (!text) return '';
+      return text.replace(/[&<>"']/g, function(m) {
+        switch (m) {
+          case '&': return '&amp;';
+          case '<': return '&lt;';
+          case '>': return '&gt;';
+          case '"': return '&quot;';
+          case "'": return '&#39;';
+          default: return m;
+        }
+      });
+    }
+
+    // Kayıtları backend'den çek ve tabloya yerleştir
     async function loadRecords() {
       const pin = localStorage.getItem('pin');
       if (!pin) {
         document.body.innerHTML = 'Giriş yapılmamış. Lütfen önce giriş yap.';
         return;
       }
-  
+
       try {
         const res = await fetch(`${backendBaseUrl}/api/profile-records?pin=${encodeURIComponent(pin)}`);
         if (!res.ok) throw new Error('Kayıtlar alınamadı.');
         const data = await res.json();
-  
+
         const recordsTable = document.getElementById('recordsTable');
         const tbody = recordsTable.querySelector('tbody');
         const errorMessage = document.getElementById('error-message');
-  
+
         if (!data.length) {
           errorMessage.textContent = 'Kayıt bulunamadı.';
           recordsTable.style.display = 'none';
           return;
         }
-  
+
         errorMessage.textContent = '';
         recordsTable.style.display = 'table';
-  
+
+        // Tabloya satırları ekle
         tbody.innerHTML = data.map(record => {
           const tarih = new Date(record.tarih).toLocaleDateString('tr-TR');
           const photoLink = record.photoFilename
-            ? `<a href="#" onclick="openModal('${backendBaseUrl}/uploads/${record.photoFilename}'); return false;">Görüntüle</a>`
+            ? `<a href="#" onclick="openPhotoModal('${backendBaseUrl}/uploads/${record.photoFilename}'); return false;">Görüntüle</a>`
             : '-';
-  
+
+          const notLink = record.not && record.not.trim() !== ''
+            ? `<a href="#" onclick="openNoteModal('${escapeHtml(record.not)}'); return false;">Notu Göster</a>`
+            : '-';
+
           return `<tr>
             <td>${tarih}</td>
             <td>${record.vardiya}</td>
@@ -150,30 +184,75 @@
             <td>${record.atki}</td>
             <td>${record.devir}</td>
             <td>${photoLink}</td>
+            <td>${notLink}</td>
           </tr>`;
         }).join('');
       } catch (err) {
         document.getElementById('error-message').textContent = `Hata: ${err.message}`;
       }
     }
-  
-    function openModal(imageUrl) {
+
+    // Fotoğraf modal açma
+    function openPhotoModal(imageUrl) {
       const modal = document.getElementById('photoModal');
       const modalImg = document.getElementById('modalImage');
+      const overlay = document.getElementById('modalOverlay');
+
       modalImg.src = imageUrl;
-      modal.style.display = 'flex';
+      modal.style.display = 'block';
+      overlay.style.display = 'block';
+
+      // ESC tuşu ile kapatma
+      function escHandler(e) {
+        if (e.key === 'Escape') {
+          closePhotoModal();
+          document.removeEventListener('keydown', escHandler);
+        }
+      }
+      document.addEventListener('keydown', escHandler);
     }
-  
-    function closeModal() {
+
+    // Fotoğraf modal kapatma
+    function closePhotoModal() {
       const modal = document.getElementById('photoModal');
+      const overlay = document.getElementById('modalOverlay');
+
       modal.style.display = 'none';
+      overlay.style.display = 'none';
       document.getElementById('modalImage').src = '';
     }
-  
-    document.addEventListener('keydown', event => {
-      if (event.key === 'Escape') closeModal();
-    });
-  
+
+    // Not modal açma
+    function openNoteModal(notText) {
+      const noteModal = document.getElementById('noteModal');
+      const noteContent = document.getElementById('noteContent');
+      const overlay = document.getElementById('modalOverlay');
+
+      noteContent.textContent = notText;
+      noteModal.style.display = 'block';
+      overlay.style.display = 'block';
+
+      // ESC tuşu ile kapatma
+      function escHandler(e) {
+        if (e.key === 'Escape') {
+          closeNoteModal();
+          document.removeEventListener('keydown', escHandler);
+        }
+      }
+      document.addEventListener('keydown', escHandler);
+    }
+
+    // Not modal kapatma
+    function closeNoteModal() {
+      const noteModal = document.getElementById('noteModal');
+      const overlay = document.getElementById('modalOverlay');
+
+      noteModal.style.display = 'none';
+      overlay.style.display = 'none';
+      document.getElementById('noteContent').textContent = '';
+    }
+
+    // Navbar ve Footer yükleme
     function loadNavbarFooter() {
       fetch('partials/navbar/navbar.html')
         .then(r => r.text())
@@ -181,7 +260,7 @@
           document.getElementById('navbar-placeholder').innerHTML = html;
         })
         .catch(err => console.error('Navbar yüklenirken hata:', err));
-  
+
       fetch('partials/footer/footer.html')
         .then(r => r.text())
         .then(html => {
@@ -189,14 +268,16 @@
         })
         .catch(err => console.error('Footer yüklenirken hata:', err));
     }
-  
+
+    // Sayfa yüklendiğinde fonksiyonları çalıştır
     document.addEventListener('DOMContentLoaded', () => {
       applySiteSettingsToPage();
       loadRecords();
       loadNavbarFooter();
     });
   </script>
-  
+
+  <!-- Güvenlik JS'si -->
   <script src="javascript/security.js"></script>
 </body>
 </html>

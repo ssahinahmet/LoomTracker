@@ -18,7 +18,6 @@ const recordSchema = new mongoose.Schema({
   vardiya: {
     type: String,
     required: true,
-    enum: VARDIYALAR,
     description: 'Çalışma vardiyası'
   },
   operator: {

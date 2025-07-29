@@ -1,0 +1,7 @@
+# .gitignore dosyası içeriği önerisi:
+
+backend/node_modules/
+backend/.env
+.DS_Store
+dist/
+build/
