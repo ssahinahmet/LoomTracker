@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LoomTracker - Machinist</title>
+  <link rel="stylesheet" href="css/makinist.css" />
+
+  <link rel="icon" href="./minahalilogoaltinlogo.png" type="image/png">
+
+  <!-- Giriş Kontrolü -->
+  <script>
+    const role = localStorage.getItem("role");
+    const pin = localStorage.getItem("pin");
+    if (!role || !pin || role !== "makinist") {
+      window.location.href = "login.html";
+    }
+  </script>
+</head>
+
+<body>
+
+  <!-- Navbar -->
+  <div id="navbar"></div>
+
+  <main>
+    <h2 id="welcomeMsg">Hoşgeldin, ...</h2>
+
+    <h1>Operatör Yönetimi</h1>
+
+    <section aria-labelledby="addOperatorHeading">
+      <h2 id="addOperatorHeading">Yeni Operatör Ekle</h2>
+      <form id="addForm" novalidate>
+        <input style="margin-bottom: 20px;" type="text" id="name" name="name" placeholder="İsim Soyisim" required autocomplete="off" />
+        <input type="text" id="pin" name="pin" placeholder="PIN (8 karakter - sadece rakam)" pattern="^\d{8}$"
+          title="8 haneli rakam giriniz" required autocomplete="off" />
+        <button type="submit">Ekle</button>
+      </form>
+    </section>
+
+    <section aria-labelledby="deactivateOperatorHeading">
+      <h2 id="deactivateOperatorHeading" style="margin-bottom: 20px;">Operatör İşten Çıkar (Pasif Et)</h2>
+      <select id="operatorList" aria-label="Operatör listesi">
+        <option value="">Yükleniyor...</option>
+      </select>
+      <button id="deactivateBtn" type="button">Seçili Operatörü İşten Çıkar</button>
+    </section>
+
+    <div id="message" role="alert" aria-live="polite"></div>
+  </main>
+
+  <div id="footer"></div>
+
+  <!-- JS -->
+  <script src="javascript/makinist.js"></script>
+
+  <script>
+    // Site ayarlarını çek ve
+    // 1. Title'ı "FirmaAdı - Machinist" yap
+    // 2. Renk temalarını uygula
+    async function applySiteSettingsToPage() {
+      try {
+        const res = await fetch("http://45.150.149.84:5000/api/site-settings");
+        if (!res.ok) throw new Error("Site ayarları yüklenemedi: " + res.status);
+        const data = await res.json();
+
+        // Title güncelle
+        if (data.firmaAdi) {
+          document.title = `${data.firmaAdi} - Machinist`;
+        }
+
+        // Renkleri uygula
+        if (data.colors) {
+          const root = document.documentElement;
+          for (const key in data.colors) {
+            if (data.colors[key]) {
+              const cssVarName = `--${key.replace(/([A-Z])/g, "-$1").toLowerCase()}`;
+              root.style.setProperty(cssVarName, data.colors[key]);
+            }
+          }
+        }
+      } catch (e) {
+        console.warn("Site ayarları uygulanamadı:", e);
+      }
+    }
+
+    // Sayfa yüklendiğinde site ayarlarını uygula ve karşılama mesajını koy
+    document.addEventListener("DOMContentLoaded", () => {
+      applySiteSettingsToPage();
+
+      const name = localStorage.getItem("name") || "Misafir";
+      const welcomeElem = document.getElementById("welcomeMsg");
+      if (welcomeElem) {
+        welcomeElem.textContent = `Hoşgeldin, ${name}`;
+      }
+    });
+  </script>
+
+</body>
+
+</html>

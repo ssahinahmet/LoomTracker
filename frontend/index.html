@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LoomTracker - Data Entry</title>
+
+  <!-- Site ikonu -->
+  <link rel="icon" href="./minahalilogoaltinlogo.png" type="image/png" />
+
+  <!-- Stil dosyaları -->
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="partials/navbar/css/navbar.css" />
+
+  <style>
+    /* Tema renk değişkenleri */
+    :root {
+      --bg-color: #0a0a0a;
+      --primary-color: #ffffff;
+      --primary-color-light: #a64dff;
+      --text-color: #d3d3d3;
+      --text-muted: #5a5a5a;
+      --input-bg: #1e1e1e;
+      --input-border: rgb(74, 20, 140);
+      --input-focus: #9c27b0;
+      --btn-bg: #7f00ff;
+      --btn-bg-hover: #a64dff;
+      --shadow-color: rgba(127, 0, 255, 0.6);
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navbar placeholder -->
+  <div id="navbar-placeholder"></div>
+
+  <main>
+    <!-- Veri giriş formu -->
+    <section id="form" aria-label="Veri Girişi Formu">
+      <form id="recordForm" enctype="multipart/form-data" novalidate>
+
+        <!-- Tarih -->
+        <label for="tarih">Tarih:</label>
+        <input id="tarih" type="date" name="tarih" required />
+
+        <!-- Tezgah No (dinamik yüklenecek) -->
+        <label for="tezgah_no">Tezgah No:</label>
+        <select id="tezgah_no" name="tezgah_no" required>
+          <option value="">Yükleniyor...</option>
+        </select>
+
+        <!-- Vardiya (dinamik yüklenecek) -->
+        <label for="vardiya">Vardiya:</label>
+        <select id="vardiya" name="vardiya" required>
+          <option value="">Yükleniyor...</option>
+        </select>
+
+        <!-- Operatör -->
+        <label for="operator">Operatör: <span id="operatorWarning" style="display:none;">!</span></label>
+        <input id="operator" type="text" name="operator" required placeholder="Operatör ismi" />
+
+        <!-- Devir -->
+        <label for="devir">Devir:</label>
+        <input id="devir" type="number" name="devir" min="0" required />
+
+        <!-- Atkı Sayısı -->
+        <label for="atki">Atkı Sayısı:</label>
+        <input id="atki" type="number" name="atki" min="0" required />
+
+        <!-- Atkı Sıklığı -->
+        <label for="atki_sikligi">Atkı Sıklığı:</label>
+        <input id="atki_sikligi" type="number" name="atki_sikligi" min="0" required />
+
+        <!-- Duruş Nedeni (Opsiyonel) -->
+        <label for="durus_nedeni">Duruş Nedeni (Opsiyonel):</label>
+        <select id="durus_nedeni" name="durus_nedeni">
+          <option value="">Seçiniz</option>
+          <option value="TEZGAH_KAPALI">TEZGAH KAPALI</option>
+        <option value="PERSONEL_YOK">PERSONEL YOK</option>
+        <option value="TEK_CALISILDI">TEK ÇALIŞILDI</option>
+        <option value="HAFTALIK_TEMIZLIK">HAFTALIK TEMİZLİK</option>
+        <option value="CAG_DEGISIMI_DUGUM_CEKME">CAĞ DEĞİŞİMİ + DÜĞÜM ÇEKME</option>
+        <option value="COZGU_DEGISIMI_DUGUM_CEKME">ÇÖZGÜ DEĞİŞİMİ + DÜĞÜM ÇEKME</option>
+        <option value="LANSET_DEGISIMI_HAV_AYARI">LANSET DEĞİŞİMİ + HAV AYARI</option>
+        <option value="EBAT_RENK_DEGISIMI_DUGUM_CEKME">EBAT RENK DEĞİŞİMİ + DÜĞÜM ÇEKME</option>
+        <option value="SIPARIS_YOK">SİPARİŞ YOK</option>
+        <option value="RENK_BOLME">RENK BÖLME</option>
+        <option value="PROGRAM_BEKLEME">PROGRAM BEKLEME</option>
+        <option value="IPLIK_BEKLEME">İPLİK BEKLEME</option>
+        <option value="DESEN_BEKLEME">DESEN BEKLEME</option>
+        <option value="ARABA_BEKLEME">ARABA BEKLEME</option>
+        <option value="DESEN_HATASI">DESEN HATASI</option>
+        <option value="APRAJ_TEMIZLEME">APRAJ TEMİZLEME</option>
+        <option value="ATKI_KOPUSLARI">ATKI KOPUŞLARI</option>
+        <option value="COZGU_KOPUSLARI">ÇÖZGÜ KOPUŞLARI</option>
+        <option value="IPLIK_KOPUSLARI">İPLİK KOPUŞLARI</option>
+        <option value="CAPRAZ_TELLERE_BAKILDI">ÇAPRAZ TELLERE BAKILDI</option>
+        <option value="AGIRLIK_AYARLAMA">AĞIRLIK AYARLAMA</option>
+        <option value="KENAR_PATLAK">KENAR PATLAK</option>
+        <option value="NUMUNE_DOKUNDU">NUMUNE DOKUNDU</option>
+        <option value="TEDARIKCI_HATASI">TEDARİKÇİ HATASI</option>
+        <option value="SURUCU_ARIZASI">SÜRÜCÜ ARIZASI</option>
+        <option value="ELEKTRONIK_ARIZA">ELEKTRONİK ARIZA</option>
+        <option value="MOTOR_ARIZASI">MOTOR ARIZASI</option>
+        <option value="MEKANIK_ARIZA">MEKANİK ARIZA</option>
+        <option value="SARK_PLATIN_MODUL_HATASI">ŞARK-PLATİN-MODÜL HATASI</option>
+        <option value="FOTOSEL_ARIZASI">FOTOSEL ARIZASI</option>
+        <option value="HAVA_BASINCI">HAVA BASINCI</option>
+        <option value="TEZGAH_BAKIMDA">TEZGAH BAKIMDA</option>
+        <option value="TEZGAHLARA_YARDIM_EDILDI">TEZGAHLARA YARDIM EDİLDİ</option>
+        <option value="YAG_DEGISIMI">YAĞ DEĞİŞİMİ</option>
+        <option value="JAKAR_KART_ARIZASI">JAKAR KART ARIZASI</option>
+        <option value="NUMUNE_BEKLEME">NUMUNE BEKLEME</option>
+        <option value="MISINA_YOL_AYARI_YAPILDI">MİSİNA - YOL AYARI YAPILDI</option>
+        <option value="LAMER_ATILDI">LAMER ATILDI</option>
+        <option value="DUGUM_CEKILDI">DÜĞÜM ÇEKİLDİ</option>
+        <option value="KOMPRESOR_ARIZASI">KOMPRESÖR ARIZASI</option>
+        <option value="AYAK_ARAMA">AYAK ARAMA</option>
+        <option value="SELONIT_DEGISIMI">SELONİT DEĞİŞİMİ</option>
+        <option value="Diger">Diğer</option>
+        </select>
+        <!-- Eğer 'Diğer' seçilirse aktif olacak input -->
+        <input
+          type="text"
+          id="durus_nedeni_yeni"
+          name="durus_nedeni_yeni"
+          placeholder="Lütfen duruş nedenini yazınız"
+          style="display: none;"
+        />
+
+        <!-- Duruş Süresi gösterimi -->
+        <div>Duruş Süre: <span id="durus_suresi_display">0 dk</span></div>
+
+        <label for="not">Not (opsiyonel):</label>
+        <textarea id="not" name="not" maxlength="300" rows="4" cols="40" placeholder="Ek açıklama, gözlem vb."></textarea>
+      
+
+        <!-- Üretim Fotoğrafı (Zorunlu) -->
+        <label for="photo">Üretim Fotoğrafı (Zorunlu):</label>
+        <input id="photo" type="file" name="photo" accept="image/*" required />
+
+        <!-- Gönder butonu -->
+        <button type="submit">Kaydı Gönder</button>
+
+        <!-- Form sonucu mesajı -->
+        <div id="formResult" class="result-message" role="alert" aria-live="polite"></div>
+      </form>
+    </section>
+  </main>
+
+  <!-- Footer placeholder -->
+  <div id="footer-placeholder"></div>
+
+  <!-- JavaScript Kısımları -->
+
+  <script>
+    const backendBaseUrl = 'http://45.150.149.84:5000';
+  
+    function toKebabCase(str) {
+      return str.replace(/[A-Z]/g, (m) => '-' + m.toLowerCase());
+    }
+  
+    function applyCSSVariables(colors) {
+      const root = document.documentElement;
+      for (const key in colors) {
+        if (colors[key]) {
+          root.style.setProperty(`--${toKebabCase(key)}`, colors[key]);
+        }
+      }
+    }
+  
+    async function fetchSiteColors() {
+      try {
+        const res = await fetch(`${backendBaseUrl}/api/site-settings`);
+        if (!res.ok) throw new Error('Site ayarları yüklenemedi: ' + res.status);
+        const data = await res.json();
+        if (data.colors) {
+          applyCSSVariables(data.colors);
+          console.log("Tema renkleri başarıyla uygulandı (fetchSiteColors).");
+        }
+      } catch (err) {
+        console.warn('Site renkleri alınamadı:', err);
+      }
+    }
+  
+    function loadNavbarAndFooter() {
+      fetch("partials/navbar/navbar.html")
+        .then((response) => response.text())
+        .then((html) => {
+          document.getElementById("navbar-placeholder").innerHTML = html;
+          setupNavbarScripts();
+        })
+        .catch((err) => console.error("Navbar yüklenemedi:", err));
+  
+      fetch("partials/footer/footer.html")
+        .then((response) => response.text())
+        .then((html) => {
+          document.getElementById("footer-placeholder").innerHTML = html;
+        })
+        .catch((err) => console.error("Footer yüklenemedi:", err));
+    }
+  
+    function setupNavbarScripts() {
+      const hamburger = document.querySelector('.hamburger');
+      const menu = document.querySelector('.menu');
+      if (!hamburger || !menu) return;
+  
+      function setHamburgerIcon(open) {
+        if (open) {
+          hamburger.innerHTML = `
+            <span style="transform: rotate(45deg) translate(5px, 5px);"></span>
+            <span style="opacity: 0;"></span>
+            <span style="transform: rotate(-45deg) translate(5px, -5px);"></span>
+          `;
+        } else {
+          hamburger.innerHTML = `
+            <span></span>
+            <span></span>
+            <span></span>
+          `;
+        }
+      }
+  
+      setHamburgerIcon(false);
+  
+      hamburger.addEventListener('click', () => {
+        const isOpen = menu.classList.toggle('active');
+        hamburger.setAttribute('aria-expanded', isOpen);
+        setHamburgerIcon(isOpen);
+      });
+  
+      hamburger.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          hamburger.click();
+        }
+      });
+  
+      document.addEventListener('click', (e) => {
+        if (!menu.contains(e.target) && !hamburger.contains(e.target)) {
+          menu.classList.remove('active');
+          hamburger.setAttribute('aria-expanded', 'false');
+          setHamburgerIcon(false);
+        }
+      });
+    }
+  
+    async function loadSiteSettings() {
+      try {
+        const response = await fetch(`${backendBaseUrl}/api/site-settings`);
+        if (!response.ok) throw new Error(`Sunucu hatası: ${response.status}`);
+        const data = await response.json();
+  
+        const tezgahSelect = document.getElementById("tezgah_no");
+        tezgahSelect.innerHTML = '<option value="">Seçiniz</option>';
+        const tezgahSayisi = parseInt(data.tezgahSayisi) || 0;
+        for (let i = 1; i <= tezgahSayisi; i++) {
+          const option = document.createElement("option");
+          option.value = i.toString();
+          option.textContent = i.toString();
+          tezgahSelect.appendChild(option);
+        }
+  
+        const vardiyaSelect = document.getElementById("vardiya");
+        vardiyaSelect.innerHTML = '<option value="">Seçiniz</option>';
+        (data.vardiyalar || []).forEach(v => {
+          const option = document.createElement("option");
+          option.value = v;
+          option.textContent = v;
+          vardiyaSelect.appendChild(option);
+        });
+  
+        // Alternatif renk uygulama
+        if (data.colors) {
+          applyCSSVariables(data.colors); // Entegrasyon noktası
+        }
+      } catch (error) {
+        console.error("Site ayarları yüklenemedi:", error.message);
+      }
+    }
+    async function fetchAndApplyTitle() {
+      try {
+        const res = await fetch(`${backendBaseUrl}/api/site-settings`);
+        if (!res.ok) throw new Error('Site ayarları yüklenemedi: ' + res.status);
+  
+        const data = await res.json();
+        if (data.firmaAdi) {
+          document.title = `${data.firmaAdi} - Data Entry `;
+        }
+      } catch (err) {
+        console.warn('Başlık ayarlanamadı:', err);
+      }
+    }
+  
+    function setupDurusNedeniYeniInput() {
+      const durusSelect = document.getElementById("durus_nedeni");
+      const yeniInput = document.getElementById("durus_nedeni_yeni");
+  
+      durusSelect.addEventListener("change", () => {
+        if (durusSelect.value === "Diger") {
+          yeniInput.style.display = "block";
+          yeniInput.required = true;
+        } else {
+          yeniInput.style.display = "none";
+          yeniInput.required = false;
+          yeniInput.value = "";
+        }
+      });
+    }
+  
+    document.addEventListener("DOMContentLoaded", () => {
+      loadNavbarAndFooter();
+      loadSiteSettings();
+      fetchSiteColors(); // Ek olarak renkleri çek
+      setupDurusNedeniYeniInput();
+      fetchAndApplyTitle(); // <<< SADECE BU SATIR EKLENDİ
+    });
+  </script>
+  
+
+  <!-- Harici JS dosyaları -->
+  <script src="javascript/form.js" defer></script>
+  <script src="javascript/security.js" defer></script>
+</body>
+</html>

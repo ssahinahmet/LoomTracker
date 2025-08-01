@@ -1,0 +1,117 @@
+
+/* 🔄 Reset ve Genel Ayarlar */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Rubik', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-weight: 400;
+  letter-spacing: 0.2px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 📋 Form Alanı */
+main {
+  max-width: 700px; /* Küçültüldü */
+  margin: 32px auto;
+  padding: 0 16px;
+}
+
+form#recordForm {
+  display: flex;
+  flex-direction: column;
+  gap: 14px; /* Azaltıldı */
+  background-color: #121212;
+  padding: 18px; /* Azaltıldı */
+  border-radius: 14px;
+  box-shadow: 0 0 14px var(--shadow-color);
+  border: 1px solid var(--primary-color);
+  font-size: 0.95rem; /* Genel font boyutu küçültüldü */
+}
+
+form#recordForm label {
+  font-weight: 600;
+  color: var(--primary-color-light);
+  user-select: none;
+  font-size: 0.95rem;
+}
+
+/* Form inputları */
+form#recordForm input[type="text"],
+form#recordForm input[type="number"],
+form#recordForm input[type="date"],
+form#recordForm select,
+form#recordForm input[type="file"] {
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  border: 1.5px solid var(--input-border);
+  border-radius: 8px;
+  padding: 8px 12px; /* Küçültüldü */
+  font-size: 0.95rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  outline-offset: 2px;
+}
+
+form#recordForm input:focus,
+form#recordForm select:focus {
+  border-color: var(--input-focus);
+  box-shadow: 0 0 12px var(--shadow-color);
+  outline: none;
+}
+
+/* Duruş nedenleri ve süresi */
+#durus_nedeni {
+  width: 100%;
+  border-radius: 8px;
+}
+
+#durus_suresi_display {
+  font-weight: 700;
+  color: var(--primary-color);
+  font-size: 0.95rem;
+}
+
+/* Gönder butonu */
+form#recordForm button[type="submit"] {
+  background-color: var(--btn-bg);
+  color: #fff;
+  font-weight: 700;
+  padding: 12px 0; /* Azaltıldı */
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1.05rem;
+  box-shadow: 0 0 16px var(--shadow-color);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  user-select: none;
+}
+
+form#recordForm button[type="submit"]:hover {
+  background-color: var(--btn-bg-hover);
+  box-shadow: 0 0 24px var(--shadow-color);
+}
+
+/* 📱 Mobil Uyumluluk */
+@media (max-width: 768px) {
+  main {
+    margin: 16px 12px;
+    padding: 0 12px;
+  }
+
+  form#recordForm {
+    padding: 14px;
+    gap: 12px;
+    font-size: 0.9rem;
+  }
+
+  form#recordForm button[type="submit"] {
+    font-size: 1rem;
+    padding: 10px 0;
+  }
+}

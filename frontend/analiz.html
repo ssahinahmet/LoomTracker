@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LoomTracker - Analysis </title>
+
+  <link rel="icon" href="./minahalilogoaltinlogo.png" type="image/png">
+
+  <!-- CSS Dosyaları -->
+  <link rel="stylesheet" href="css/analiz.css" />
+  <link rel="stylesheet" href="partials/navbar/css/navbar.css" />
+
+
+  <style>
+    /* Varsayılan CSS değişkenleri */
+    :root {
+      --bg-color: #0a0a0a;
+      --primary-color: #ffffff;
+      --primary-color-light: #a64dff;
+      --text-color: #d3d3d3;
+      --text-muted: #5a5a5a;
+      --input-bg: #1e1e1e;
+      --input-border: rgb(74, 20, 140);
+      --input-focus: #9c27b0;
+      --btn-bg: #7f00ff;
+      --btn-bg-hover: #a64dff;
+      --shadow-color: rgba(127, 0, 255, 0.6);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar placeholder -->
+  <div id="navbar-placeholder" role="navigation" aria-label="Ana Navigasyon"></div>
+
+  <main>
+    <div class="production-analiz-header">
+      <div class="line"></div>
+      <h1>Üretim Analizleri</h1>
+      <div class="line"></div>
+    </div>
+
+    <!-- Sekme Listesi -->
+    <section class="tablist" role="tablist" aria-label="Üretim Analiz Sekmeleri">
+      <button role="tab" aria-selected="true" aria-controls="tab-daily" id="tab-daily-btn" tabindex="0" class="tab active">Günlük</button>
+      <button role="tab" aria-selected="false" aria-controls="tab-weekly" id="tab-weekly-btn" tabindex="-1" class="tab">Haftalık</button>
+      <button role="tab" aria-selected="false" aria-controls="tab-monthly" id="tab-monthly-btn" tabindex="-1" class="tab">Aylık</button>
+      <button role="tab" aria-selected="false" aria-controls="tab-operator" id="tab-operator-btn" tabindex="-1" class="tab">Operatör Üretim</button>
+      <button role="tab" aria-selected="false" aria-controls="tab-tevazgah" id="tab-tevazgah-btn" tabindex="-1" class="tab">Tezgah Bazlı m²</button>
+      <button role="tab" aria-selected="false" aria-controls="tab-varvazgah" id="tab-varvazgah-btn" tabindex="-1" class="tab">Vardiya Bazlı m²</button>
+      <button role="tab" aria-selected="false" aria-controls="tab-tevazgah-atki" id="tab-tevazgah-atki-btn" tabindex="-1" class="tab">Tezgah Bazlı Atkı</button>
+      <button role="tab" aria-selected="false" aria-controls="tab-personel-uretim" id="tab-personel-uretim-btn" tabindex="-1" class="tab">Personel Üretim</button>
+      <button role="tab" aria-selected="false" aria-controls="tab-durus-nedenleri" id="tab-durus-nedenleri-btn" tabindex="-1" class="tab">Duruş Nedenleri</button>
+      <button role="tab" aria-selected="false" aria-controls="tab-tevazgah-durus" id="tab-tevazgah-durus-btn" tabindex="-1" class="tab">Tezgah Bazlı Duruş Süresi</button>
+      <button role="tab" aria-selected="false" aria-controls="tab-top3-personel" id="tab-top3-personel-btn" tabindex="-1" class="tab">En Çok Üreten 3 Personel</button>
+      <button role="tab" aria-selected="false" aria-controls="tab-opk" id="tab-opk-btn" tabindex="-1" class="tab">OPK</button>
+    </section>
+
+    <!-- Tab Panelleri -->
+    <section id="tab-daily" role="tabpanel" tabindex="0" aria-labelledby="tab-daily-btn" class="tab-panel active">
+      <h2>Günlük Üretim</h2>
+      <table id="dailyTable" style="width:100%; border-collapse: collapse;">
+        <thead>
+          <tr>
+            <th style="text-align:left; padding:8px; border-bottom:2px solid #444;">Tarih</th>
+            <th style="text-align:right; padding:8px; border-bottom:2px solid #444;">Üretim Miktarı (m²)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="2" style="text-align:center; padding:12px; color:#888;">Yükleniyor...</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Haftalık -->
+    <section id="tab-weekly" role="tabpanel" tabindex="0" aria-labelledby="tab-weekly-btn" class="tab-panel" hidden>
+      <h2>Haftalık Üretim</h2>
+      <table id="weeklyTable" style="width:100%; border-collapse: collapse;">
+        <thead>
+          <tr>
+            <th style="text-align:left; padding:8px; border-bottom:2px solid #444;">Hafta</th>
+            <th style="text-align:right; padding:8px; border-bottom:2px solid #444;">Üretim Miktarı (m²)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="2" style="text-align:center; padding:12px; color:#888;">Yükleniyor...</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Aylık -->
+    <section id="tab-monthly" role="tabpanel" tabindex="0" aria-labelledby="tab-monthly-btn" class="tab-panel" hidden>
+      <h2>Aylık Üretim</h2>
+      <table id="monthlyTable" style="width:100%; border-collapse: collapse;">
+        <thead>
+          <tr>
+            <th style="text-align:left; padding:8px; border-bottom:2px solid #444;">Ay</th>
+            <th style="text-align:right; padding:8px; border-bottom:2px solid #444;">Üretim Miktarı (m²)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="2" style="text-align:center; padding:12px; color:#888;">Yükleniyor...</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Operatör Üretim -->
+    <section id="tab-operator" role="tabpanel" tabindex="0" aria-labelledby="tab-operator-btn" class="tab-panel" hidden>
+      <h2>Operatör Bazlı Toplam Üretim (m²)</h2>
+      <table id="operatorM2Table" style="width:100%; border-collapse: collapse;">
+        <thead>
+          <tr>
+            <th style="text-align:left; padding:8px; border-bottom:2px solid #444;">Operatör</th>
+            <th style="text-align:right; padding:8px; border-bottom:2px solid #444;">Toplam m²</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="2" style="text-align:center; padding:12px; color:#888;">Yükleniyor...</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Tezgah Bazlı m² -->
+    <section id="tab-tevazgah" role="tabpanel" tabindex="0" aria-labelledby="tab-tevazgah-btn" class="tab-panel" hidden>
+      <h2>Tezgah Bazlı Üretim (m²)</h2>
+      <table id="tezgahUretimTable" style="width:100%; border-collapse: collapse;">
+        <thead>
+          <tr>
+            <th style="text-align:left; padding:8px; border-bottom:2px solid #444;">Tezgah No</th>
+            <th style="text-align:right; padding:8px; border-bottom:2px solid #444;">Toplam m²</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="2" style="text-align:center; padding:12px; color:#888;">Yükleniyor...</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Vardiya Bazlı m² -->
+    <section id="tab-varvazgah" role="tabpanel" tabindex="0" aria-labelledby="tab-varvazgah-btn" class="tab-panel" hidden>
+      <h2>Vardiya Bazlı Üretim (m²)</h2>
+      <table id="vardiyaM2Table" style="width:100%; border-collapse: collapse;">
+        <thead>
+          <tr>
+            <th style="text-align:left; padding:8px; border-bottom:2px solid #444;">Vardiya</th>
+            <th style="text-align:right; padding:8px; border-bottom:2px solid #444;">Toplam m²</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="2" style="text-align:center; padding:12px; color:#888;">Yükleniyor...</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Tezgah Bazlı Atkı -->
+    <section id="tab-tevazgah-atki" role="tabpanel" tabindex="0" aria-labelledby="tab-tevazgah-atki-btn" class="tab-panel" hidden>
+      <h2>Tezgah Bazlı Atkı Sayısı</h2>
+      <table id="tezgahAtkiTable" style="width:100%; border-collapse: collapse;">
+        <thead>
+          <tr>
+            <th style="text-align:left; padding:8px; border-bottom:2px solid #444;">Tezgah No</th>
+            <th style="text-align:right; padding:8px; border-bottom:2px solid #444;">Toplam Atkı</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="2" style="text-align:center; padding:12px; color:#888;">Yükleniyor...</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Personel Üretim -->
+    <section id="tab-personel-uretim" role="tabpanel" tabindex="0" aria-labelledby="tab-personel-uretim-btn" class="tab-panel" hidden>
+      <h2>Personel Bazlı Üretim (m² ve Atkı)</h2>
+      <table id="personelUretimTable" style="width:100%; border-collapse: collapse;">
+        <thead>
+          <tr>
+            <th style="text-align:left; padding:8px; border-bottom:2px solid #444;">Personel</th>
+            <th style="text-align:right; padding:8px; border-bottom:2px solid #444;">Toplam m²</th>
+            <th style="text-align:right; padding:8px; border-bottom:2px solid #444;">Toplam Atkı</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="3" style="text-align:center; padding:12px; color:#888;">Yükleniyor...</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Duruş Nedenleri -->
+    <section id="tab-durus-nedenleri" role="tabpanel" tabindex="0" aria-labelledby="tab-durus-nedenleri-btn" class="tab-panel" hidden>
+      <h2>Duruş Nedenleri</h2>
+      <table id="durusNedeniTable" style="width:100%; border-collapse: collapse;">
+        <thead>
+          <tr>
+            <th style="text-align:left; padding:8px; border-bottom:2px solid #444;">Duruş Nedeni</th>
+            <th style="text-align:right; padding:8px; border-bottom:2px solid #444;">Toplam Duruş Süresi (dk)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="2" style="text-align:center; padding:12px; color:#888;">Yükleniyor...</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Tezgah Bazlı Duruş Süresi -->
+    <section id="tab-tevazgah-durus" role="tabpanel" tabindex="0" aria-labelledby="tab-tevazgah-durus-btn" class="tab-panel" hidden>
+      <h2>Tezgah Bazlı Duruş Süresi (dk)</h2>
+      <table id="tezgahDurusTable" style="width:100%; border-collapse: collapse;">
+        <thead>
+          <tr>
+            <th style="text-align:left; padding:8px; border-bottom:2px solid #444;">Tezgah No</th>
+            <th style="text-align:right; padding:8px; border-bottom:2px solid #444;">Toplam Duruş Süresi (dk)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="2" style="text-align:center; padding:12px; color:#888;">Yükleniyor...</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- En Çok Üreten 3 Personel -->
+    <section id="tab-top3-personel" role="tabpanel" tabindex="0" aria-labelledby="tab-top3-personel-btn" class="tab-panel" hidden>
+      <h2>En Çok Üretim Yapan 3 Personel</h2>
+      <table id="top3PersonelTable" style="width:100%; border-collapse: collapse;">
+        <thead>
+          <tr>
+            <th style="text-align:left; padding:8px; border-bottom:2px solid #444;">Personel</th>
+            <th style="text-align:right; padding:8px; border-bottom:2px solid #444;">Toplam m²</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="2" style="text-align:center; padding:12px; color:#888;">Yükleniyor...</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+  </main>
+
+  <!-- Footer placeholder -->
+  <div id="footer-placeholder" role="contentinfo"></div>
+
+  <script>
+    const backendBaseUrl = 'http://45.150.149.84:5000';
+  
+    function toKebabCase(str) {
+      return str.replace(/[A-Z]/g, (m) => '-' + m.toLowerCase());
+    }
+  
+    function applyCSSVariables(colors) {
+      const root = document.documentElement;
+      for (const key in colors) {
+        if (colors[key]) {
+          root.style.setProperty(`--${toKebabCase(key)}`, colors[key]);
+        }
+      }
+    }
+  
+    async function fetchSiteColors() {
+      try {
+        const res = await fetch(`${backendBaseUrl}/api/site-settings`);
+        if (!res.ok) throw new Error('Site ayarları yüklenemedi: ' + res.status);
+  
+        const data = await res.json();
+        if (data.colors) {
+          applyCSSVariables(data.colors);
+        }
+      } catch (err) {
+        console.warn('Site renkleri alınamadı:', err);
+      }
+    }
+  
+    async function fetchAndApplyTitle() {
+      try {
+        const res = await fetch(`${backendBaseUrl}/api/site-settings`);
+        if (!res.ok) throw new Error('Site ayarları yüklenemedi: ' + res.status);
+  
+        const data = await res.json();
+        if (data.firmaAdi) {
+          document.title = `${data.firmaAdi} - Analysis `;
+        }
+      } catch (err) {
+        console.warn('Başlık ayarlanamadı:', err);
+      }
+    }
+  
+    document.addEventListener('DOMContentLoaded', () => {
+      fetchSiteColors();
+      fetchAndApplyTitle(); // <<< SADECE BU SATIR EKLENDİ
+  
+      // Navbar & Footer yüklemeleri
+      fetch('partials/navbar/navbar.html')
+        .then(res => res.text())
+        .then(html => {
+          document.getElementById('navbar-placeholder').innerHTML = html;
+          if (typeof initHamburger === 'function') initHamburger();
+        })
+        .catch(err => console.error('Navbar yüklenirken hata:', err));
+  
+      fetch('partials/footer/footer.html')
+        .then(res => res.text())
+        .then(html => {
+          document.getElementById('footer-placeholder').innerHTML = html;
+        })
+        .catch(err => console.error('Footer yüklenirken hata:', err));
+    });
+  </script>
+  
+
+  <!-- Sayfa Fonksiyonları ve Güvenlik -->
+  <script src="javascript/analiz.js"></script>
+  <script src="javascript/security.js"></script>
+  <script src="partials/navbar/js/navbar.js"></script>
+  <script src="partials/footer/js/footer.js"></script>
+
+</body>
+</html>

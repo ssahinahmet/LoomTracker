@@ -1,0 +1,53 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+.pnpm-debug.log*
+
+# Environment
+.env
+.env.*.local
+
+# OS/system files
+.DS_Store
+Thumbs.db
+
+# Build output
+dist/
+build/
+out/
+.next/
+coverage/
+
+# VSCode
+.vscode/
+
+# Logs
+logs/
+*.log
+*.log.*
+
+# Optional backups
+*.bak
+*.swp
+*.tmp
+
+# Frontend build (if exists)
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+
+# Backend build
+backend/node_modules/
+backend/dist/
+backend/build/
+
+# TypeScript
+*.tsbuildinfo
+
+# Others
+.idea/
+*.sublime-project
+*.sublime-workspace

@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Site Ayarları</title>
+  <link rel="stylesheet" href="partials/navbar/css/navbar.css" />
+
+  <style>
+    :root {
+      --bg-color: #0a0a0a;
+      --primary-color: #ffffff;
+      --primary-color-light: #a64dff;
+      --text-color: #d3d3d3;
+      --text-muted: #5a5a5a;
+      --input-bg: #1e1e1e;
+      --input-border: #4a148c;
+      --input-focus: #9c27b0;
+      --btn-bg: #7f00ff;
+      --btn-bg-hover: #a64dff;
+      --shadow-color: rgba(127, 0, 255, 0.6);
+    }
+
+    /* Reset ve temel ayarlar */
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.5;
+    }
+
+    /* Navbar ve footer yükleme alanları */
+    #navbar-placeholder,
+    #footer-placeholder {
+      width: 100%;
+    }
+
+    /* Form container - max 1000px genişlik, responsive */
+    #container {
+      max-width: 1000px;
+      width: 90%;
+      margin: 30px auto;
+      padding: 0 20px;
+      flex: 1 0 auto;
+    }
+
+    h1 {
+      font-weight: 700;
+      margin-bottom: 25px;
+      color: var(--primary-color-light);
+      text-align: center;
+    }
+
+    form {
+      background: #121212;
+      padding: 25px 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px var(--shadow-color);
+      user-select: none;
+    }
+
+    label {
+      display: block;
+      margin-top: 18px;
+      font-weight: 600;
+      color: var(--primary-color);
+    }
+
+    input[type="text"],
+    input[type="number"],
+    textarea {
+      width: 100%;
+      padding: 10px 12px;
+      margin-top: 6px;
+      background: var(--input-bg);
+      border: 1.5px solid var(--input-border);
+      color: var(--text-color);
+      border-radius: 6px;
+      font-size: 1rem;
+      font-family: inherit;
+      transition: border-color 0.3s ease;
+      outline-offset: 2px;
+    }
+
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    textarea:focus {
+      border-color: var(--input-focus);
+      outline: none;
+      box-shadow: 0 0 6px var(--input-focus);
+    }
+
+    button {
+      margin-top: 28px;
+      width: 100%;
+      padding: 12px 0;
+      font-weight: 700;
+      font-size: 1.1rem;
+      background: var(--btn-bg);
+      border: none;
+      color: white;
+      cursor: pointer;
+      border-radius: 8px;
+      box-shadow: 0 0 15px var(--shadow-color);
+      transition: background-color 0.3s ease;
+      user-select: none;
+    }
+
+    button:hover {
+      background: var(--btn-bg-hover);
+    }
+
+    fieldset.colors-group {
+      margin-top: 28px;
+      padding: 18px 20px;
+      border: 1.5px solid var(--input-border);
+      border-radius: 8px;
+      color: var(--primary-color-light);
+      font-weight: 600;
+    }
+
+    fieldset.colors-group legend {
+      padding: 0 12px;
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+
+    /* Tezgah eni inputları için container */
+    #tezgahlarContainer > div {
+      margin-bottom: 12px;
+    }
+
+    /* Responsive ayarları */
+    @media (max-width: 480px) {
+      form {
+        padding: 20px 15px;
+      }
+      button {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar yükleme alanı -->
+  <div id="navbar-placeholder"></div>
+
+  <!-- Ana içerik -->
+  <div id="container">
+    <h1>Site Ayarları</h1>
+
+    <form id="settingsForm" autocomplete="off">
+      <label for="firmaAdi">Firma Adı:</label>
+      <input type="text" id="firmaAdi" name="firmaAdi" required />
+
+      <label for="tezgahSayisi">Tezgah Sayısı:</label>
+      <input type="number" id="tezgahSayisi" name="tezgahSayisi" min="1" required />
+
+      <!-- Tezgah eni inputları buraya eklenecek -->
+      <div id="tezgahlarContainer"></div>
+
+      <label for="vardiyalar">Vardiyalar (virgülle ayırınız):</label>
+      <input
+        type="text"
+        id="vardiyalar"
+        name="vardiyalar"
+        placeholder="08:00-16:00,16:00-00:00,00:00-08:00"
+      />
+
+      <fieldset class="colors-group">
+        <legend>Renk Ayarları</legend>
+
+        <label for="bgColor">Arka Plan Rengi:</label>
+        <input type="text" id="bgColor" name="bgColor" />
+
+        <label for="primaryColor">Birincil Renk:</label>
+        <input type="text" id="primaryColor" name="primaryColor" />
+
+        <label for="primaryColorLight">Birincil Açık Renk:</label>
+        <input type="text" id="primaryColorLight" name="primaryColorLight" />
+
+        <label for="textColor">Yazı Rengi:</label>
+        <input type="text" id="textColor" name="textColor" />
+
+        <label for="textMuted">Sönük Yazı Rengi:</label>
+        <input type="text" id="textMuted" name="textMuted" />
+
+        <label for="inputBg">Input Arka Plan:</label>
+        <input type="text" id="inputBg" name="inputBg" />
+
+        <label for="inputBorder">Input Kenarlık:</label>
+        <input type="text" id="inputBorder" name="inputBorder" />
+
+        <label for="inputFocus">Input Odak Rengi:</label>
+        <input type="text" id="inputFocus" name="inputFocus" />
+
+        <label for="btnBg">Buton Arka Plan:</label>
+        <input type="text" id="btnBg" name="btnBg" />
+
+        <label for="btnBgHover">Buton Hover Arka Plan:</label>
+        <input type="text" id="btnBgHover" name="btnBgHover" />
+
+        <label for="shadowColor">Gölge Rengi:</label>
+        <input type="text" id="shadowColor" name="shadowColor" />
+      </fieldset>
+
+      <button type="submit">Kaydet</button>
+    </form>
+  </div>
+
+  <!-- Footer yükleme alanı -->
+  <div id="footer-placeholder"></div>
+
+  <script>
+    const apiUrl = 'http://45.150.149.84:5000/api/site-settings';
+
+    // camelCase'i kebab-case yapar (CSS değişkenleri için)
+    function toKebabCase(str) {
+      return str.replace(/[A-Z]/g, (m) => '-' + m.toLowerCase());
+    }
+
+    // CSS değişkenlerini uygular
+    function applyCSSVariables(colors) {
+      const root = document.documentElement;
+      for (const key in colors) {
+        if (colors[key]) {
+          root.style.setProperty(`--${toKebabCase(key)}`, colors[key]);
+        }
+      }
+    }
+
+    // Tezgahlar için inputları render eden fonksiyon
+    function renderTezgahInputs(tezgahSayisi, tezgahlarData = []) {
+      const container = document.getElementById('tezgahlarContainer');
+      container.innerHTML = ''; // Temizle
+
+      for (let i = 1; i <= tezgahSayisi; i++) {
+        const found = tezgahlarData.find((t) => t.no === i);
+        const eniValue = found ? found.eni : 4; // Default 4 metre
+
+        const wrapper = document.createElement('div');
+
+        const label = document.createElement('label');
+        label.htmlFor = `tezgahEni${i}`;
+        label.textContent = `Tezgah ${i} Eni (metre):`;
+        label.style.fontWeight = '600';
+        label.style.color = 'var(--primary-color)';
+        label.style.display = 'block';
+
+        const input = document.createElement('input');
+        input.type = 'number';
+        input.min = '0.1';
+        input.step = '0.1';
+        input.id = `tezgahEni${i}`;
+        input.name = `tezgahEni${i}`;
+        input.value = eniValue;
+        input.required = true;
+        input.style.width = '100%';
+        input.style.padding = '10px 12px';
+        input.style.background = 'var(--input-bg)';
+        input.style.border = '1.5px solid var(--input-border)';
+        input.style.color = 'var(--text-color)';
+        input.style.borderRadius = '6px';
+        input.style.fontSize = '1rem';
+        input.style.fontFamily = 'inherit';
+
+        wrapper.appendChild(label);
+        wrapper.appendChild(input);
+
+        container.appendChild(wrapper);
+      }
+    }
+
+    // Ayarları API'den çek ve forma doldur
+    async function fetchSettings() {
+      try {
+        const res = await fetch(apiUrl);
+        if (!res.ok) throw new Error(`Sunucu hatası: ${res.status}`);
+
+        const data = await res.json();
+
+        document.getElementById('firmaAdi').value = data.firmaAdi || '';
+        document.getElementById('tezgahSayisi').value = data.tezgahSayisi || 1;
+        document.getElementById('vardiyalar').value = (data.vardiyalar || []).join(',');
+
+        if (data.tezgahlar && data.tezgahlar.length) {
+          renderTezgahInputs(data.tezgahSayisi, data.tezgahlar);
+        } else {
+          renderTezgahInputs(data.tezgahSayisi || 1);
+        }
+
+        if (data.colors) {
+          for (const [key, value] of Object.entries(data.colors)) {
+            const el = document.getElementById(key);
+            if (el) el.value = value || '';
+          }
+          applyCSSVariables(data.colors);
+        }
+      } catch (err) {
+        alert('Ayarlar yüklenemedi: ' + err.message);
+        console.error(err);
+      }
+    }
+
+    // Ayarları API'ye kaydet
+    async function saveSettings(formData) {
+      try {
+        const res = await fetch(apiUrl, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData),
+        });
+
+        if (!res.ok) throw new Error(`Sunucu hatası: ${res.status}`);
+        alert('Ayarlar başarıyla kaydedildi.');
+        applyCSSVariables(formData.colors);
+      } catch (err) {
+        alert('Kaydederken hata oluştu: ' + err.message);
+        console.error(err);
+      }
+    }
+
+    // Form submit handler
+    document.getElementById('settingsForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const tezgahSayisi = Number(document.getElementById('tezgahSayisi').value);
+
+      // Tezgahlar dizisini topla
+      const tezgahlar = [];
+      for (let i = 1; i <= tezgahSayisi; i++) {
+        const eniInput = document.getElementById(`tezgahEni${i}`);
+        if (!eniInput) {
+          alert(`Tezgah ${i} eni bilgisi eksik!`);
+          return;
+        }
+        const eni = parseFloat(eniInput.value);
+        if (isNaN(eni) || eni < 0.1) {
+          alert(`Tezgah ${i} eni geçerli bir sayı olmalı ve 0.1'den küçük olamaz.`);
+          return;
+        }
+        tezgahlar.push({ no: i, eni });
+      }
+
+      const formData = {
+        firmaAdi: document.getElementById('firmaAdi').value.trim(),
+        tezgahSayisi,
+        vardiyalar: document
+          .getElementById('vardiyalar')
+          .value.split(',')
+          .map((v) => v.trim())
+          .filter(Boolean),
+        tezgahlar,
+        colors: {
+          bgColor: document.getElementById('bgColor').value.trim(),
+          primaryColor: document.getElementById('primaryColor').value.trim(),
+          primaryColorLight: document.getElementById('primaryColorLight').value.trim(),
+          textColor: document.getElementById('textColor').value.trim(),
+          textMuted: document.getElementById('textMuted').value.trim(),
+          inputBg: document.getElementById('inputBg').value.trim(),
+          inputBorder: document.getElementById('inputBorder').value.trim(),
+          inputFocus: document.getElementById('inputFocus').value.trim(),
+          btnBg: document.getElementById('btnBg').value.trim(),
+          btnBgHover: document.getElementById('btnBgHover').value.trim(),
+          shadowColor: document.getElementById('shadowColor').value.trim(),
+        },
+      };
+
+      await saveSettings(formData);
+    });
+
+    // Tezgah sayısı inputu değiştiğinde tezgah eni inputlarını güncelle
+    document.getElementById('tezgahSayisi').addEventListener('input', (e) => {
+      const count = Number(e.target.value);
+      if (count > 0) {
+        renderTezgahInputs(count);
+      }
+    });
+
+    // Admin kontrolü - localStorage'dan role'u kontrol et
+    async function checkAdminAccess() {
+      const role = localStorage.getItem('role');
+      if (role !== 'admin') {
+        alert('Bu sayfaya erişim yetkiniz yok.');
+        window.location.href = '/'; // Anasayfa ya da login sayfasına yönlendir
+        return false;
+      }
+      return true;
+    }
+
+    // Navbar ve Footer'u partial olarak yükle
+    async function loadNavbarAndFooter() {
+      try {
+        const navRes = await fetch('partials/navbar/navbar.html');
+        const navHtml = await navRes.text();
+        document.getElementById('navbar-placeholder').innerHTML = navHtml;
+
+        const footerRes = await fetch('partials/footer/footer.html');
+        const footerHtml = await footerRes.text();
+        document.getElementById('footer-placeholder').innerHTML = footerHtml;
+      } catch (e) {
+        console.error('Navbar/Footer yüklenirken hata:', e);
+      }
+    }
+
+    // Sayfa yüklendiğinde işlemleri yap
+    document.addEventListener('DOMContentLoaded', async () => {
+      await loadNavbarAndFooter();
+
+      const allowed = await checkAdminAccess();
+      if (!allowed) return;
+
+      await fetchSettings();
+    });
+  </script>
+</body>
+</html>

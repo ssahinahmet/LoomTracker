@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LoomTracker - Login</title>
+
+  <link rel="icon" href="./minahalilogoaltinlogo.png" type="image/png">
+
+  <link rel="stylesheet" href="css/style.css" />
+
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      margin: 0;
+      background-color: #121212;
+      font-family: 'Inter', sans-serif;
+      color: #f5a623;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-box {
+      background-color: #1e1e1e;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(245, 166, 35, 0.2);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .login-box h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: #fff;
+      user-select: none;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 1rem;
+      border: none;
+      border-radius: 4px;
+      background-color: #333;
+      color: #fff;
+      font-size: 1rem;
+      box-sizing: border-box;
+      text-transform: uppercase;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #f5a623;
+      color: #121212;
+      border: none;
+      border-radius: 4px;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s ease-in-out;
+      user-select: none;
+    }
+
+    button:hover {
+      background-color: #e89f10;
+    }
+
+    .error {
+      color: #e57373;
+      text-align: center;
+      margin-top: 1rem;
+      min-height: 1.2em;
+      user-select: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <main>
+    <div class="login-box">
+      <h2>Giriş Yap</h2>
+      <form id="loginForm" novalidate>
+        <input
+          type="password"
+          id="pin"
+          placeholder="8 Haneli PIN"
+          maxlength="8"
+          required
+          autocomplete="off"
+          inputmode="text"
+          pattern="[A-Za-z0-9]{8}"
+          title="8 haneli alfasayısal PIN"
+        />
+        <button type="submit">Giriş</button>
+        <div class="error" id="errorMsg" role="alert" aria-live="polite"></div>
+      </form>
+    </div>
+  </main>
+
+  <div id="footer-placeholder"></div>
+
+  <script>
+    // Footer dinamik yükleme
+    fetch("partials/footer/footer.html")
+      .then(r => r.text())
+      .then(h => {
+        document.getElementById("footer-placeholder").innerHTML = h;
+      })
+      .catch(err => console.error("Footer yüklenirken hata:", err));
+  
+    // Site ayarlarını çek ve
+    // 1. Title'ı "FirmaAdı - Giriş" yap
+    // 2. Renk temalarını uygula
+    async function applySiteSettingsToPage() {
+      try {
+        const res = await fetch("http://45.150.149.84:5000/api/site-settings");
+        if (!res.ok) throw new Error("Site ayarları yüklenemedi: " + res.status);
+        const data = await res.json();
+  
+        // Title güncelle
+        if (data.firmaAdi) {
+          document.title = `${data.firmaAdi} - Login`;
+        }
+  
+        // Renkleri uygula
+        if (data.colors) {
+          const root = document.documentElement;
+          for (const key in data.colors) {
+            if (data.colors[key]) {
+              const cssVarName = `--${key.replace(/([A-Z])/g, "-$1").toLowerCase()}`;
+              root.style.setProperty(cssVarName, data.colors[key]);
+            }
+          }
+        }
+      } catch (e) {
+        console.warn("Site ayarları uygulanamadı:", e);
+      }
+    }
+  
+    // Login form submit işlemi
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+  
+      const pinInput = document.getElementById("pin");
+      const pin = pinInput.value.trim().toUpperCase();
+      const errorDiv = document.getElementById("errorMsg");
+  
+      errorDiv.textContent = "";
+  
+      const pinRegex = /^[A-Z0-9]{8}$/;
+      if (!pinRegex.test(pin)) {
+        errorDiv.textContent = "PIN 8 haneli alfasayısal olmalıdır (A-Z, 0-9).";
+        return;
+      }
+  
+      try {
+        const res = await fetch("http://45.150.149.84:5000/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ pin })
+        });
+  
+        const data = await res.json();
+  
+        if (!res.ok) {
+          errorDiv.textContent = data.error || "Giriş başarısız.";
+          return;
+        }
+  
+        localStorage.setItem("pin", pin);
+        localStorage.setItem("role", data.role || "");
+        localStorage.setItem("name", data.name || "");
+        localStorage.setItem("loginTime", Date.now().toString());
+  
+        if (data.operatorId) {
+          localStorage.setItem("operator_id", data.operatorId);
+        } else if (data._id) {
+          localStorage.setItem("operator_id", data._id);
+        }
+  
+        const redirectPage = (data.role === "makinist") ? "makinist.html" : "index.html";
+        window.location.href = redirectPage;
+  
+      } catch (err) {
+        errorDiv.textContent = "Sunucu hatası: " + err.message;
+      }
+    });
+  
+    // Sayfa yüklendiğinde site ayarlarını uygula
+    document.addEventListener("DOMContentLoaded", () => {
+      applySiteSettingsToPage();
+    });
+  </script>
+  
+
+</body>
+</html>

@@ -1,0 +1,168 @@
+:root {
+  --minahali-bg-color: #0a0a0a;
+  --minahali-primary-color: #ffffff;
+  --minahali-primary-color-light: #a64dff;
+  --minahali-text-color: #d3d3d3;
+  --minahali-text-muted: #5a5a5a;
+  --minahali-input-bg: #1e1e1e;
+  --minahali-input-border: rgb(74, 20, 140);
+  --minahali-input-focus: #9c27b0;
+  --minahali-btn-bg: #7f00ff;
+  --minahali-btn-bg-hover: #a64dff;
+  --minahali-shadow-color: rgba(127, 0, 255, 0.6);
+}
+
+/* Navbar - Özel prefix ile çakışma önleniyor */
+.minahali-navbar {
+  position: relative !important;
+  background-color: var(--minahali-bg-color) !important;
+  border-bottom: 1px solid var(--minahali-input-border) !important;
+  z-index: 9999 !important;
+  width: 100% !important;
+  top: 0 !important;
+}
+
+.minahali-navbar-container {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: 0 1rem !important;
+  height: 60px !important;
+  max-width: 1200px !important;
+  margin: 0 auto !important;
+}
+
+/* Logo */
+.minahali-navbar-logo {
+  display: flex !important;
+  align-items: center !important;
+  cursor: pointer !important;
+}
+
+.minahali-logo-img {
+  height: 40px !important;
+  user-select: none !important;
+  pointer-events: none !important;
+}
+
+/* Desktop menü */
+.minahali-navbar-menu {
+  display: flex !important;
+  align-items: center !important;
+  gap: 1.5rem !important;
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.minahali-navbar-item {
+  position: relative !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.minahali-navbar-link {
+  color: var(--minahali-text-color) !important;
+  text-decoration: none !important;
+  font-weight: 600 !important;
+  padding: 0.5rem 1rem !important;
+  border-radius: 6px !important;
+  border: 2px solid transparent !important;
+  transition: all 0.3s ease !important;
+  display: block !important;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif !important;
+}
+
+.minahali-navbar-link.minahali-veri-analiz:hover {
+  color: #fff !important;
+  border-color: var(--minahali-btn-bg) !important;
+  background-color: var(--minahali-btn-bg-hover) !important;
+  text-shadow: 0 0 6px var(--minahali-shadow-color) !important;
+}
+
+.minahali-navbar-link.minahali-cikis-yap:hover {
+  color: #fff !important;
+  border-color: var(--minahali-btn-bg-hover) !important;
+  background-color: var(--minahali-btn-bg) !important;
+  text-shadow: 0 0 6px var(--minahali-shadow-color) !important;
+}
+
+/* Hamburger butonu */
+.minahali-navbar-toggle {
+  display: none !important;
+  flex-direction: column !important;
+  background: none !important;
+  border: none !important;
+  cursor: pointer !important;
+  padding: 4px !important;
+  width: 30px !important;
+  height: 30px !important;
+  justify-content: center !important;
+  gap: 4px !important;
+  outline: none !important;
+}
+
+.minahali-hamburger-line {
+  width: 22px !important;
+  height: 3px !important;
+  background-color: var(--minahali-text-color) !important;
+  border-radius: 2px !important;
+  transition: all 0.3s ease !important;
+  transform-origin: center !important;
+  display: block !important;
+}
+
+/* Hamburger animasyonu */
+.minahali-navbar-toggle.minahali-active .minahali-hamburger-line:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px) !important;
+}
+
+.minahali-navbar-toggle.minahali-active .minahali-hamburger-line:nth-child(2) {
+  opacity: 0 !important;
+}
+
+.minahali-navbar-toggle.minahali-active .minahali-hamburger-line:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -5px) !important;
+}
+
+/* Mobil responsive */
+@media screen and (max-width: 768px) {
+  .minahali-navbar-toggle {
+    display: flex !important;
+  }
+
+  .minahali-navbar-menu {
+    position: fixed !important;
+    left: 0 !important;
+    top: 61px !important;
+    width: 100% !important;
+    height: calc(100vh - 61px) !important;
+    background-color: var(--minahali-bg-color) !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
+    padding-top: 2rem !important;
+    gap: 1rem !important;
+    transform: translateX(-100%) !important;
+    transition: transform 0.3s ease-in-out !important;
+    overflow-y: auto !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7) !important;
+    z-index: 9998 !important;
+  }
+
+  .minahali-navbar-menu.minahali-active {
+    transform: translateX(0) !important;
+  }
+
+  .minahali-navbar-item {
+    width: 90% !important;
+    text-align: center !important;
+  }
+
+  .minahali-navbar-link {
+    font-size: 1.2rem !important;
+    padding: 1rem 2rem !important;
+    width: 100% !important;
+    border-radius: 8px !important;
+  }
+}
