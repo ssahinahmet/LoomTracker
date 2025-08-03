@@ -2,8 +2,6 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
 
-console.log("makinistRoutes dosyası yüklendi");
-
 // Helper: Yeni benzersiz userId oluştur
 async function generateNewUserId() {
   const lastUser = await User.find({ userId: /^pizza\d+$/ })
