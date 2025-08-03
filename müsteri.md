@@ -165,7 +165,7 @@ Backup: Günlük otomatik yedekleme
 - SSL sertifikası: $0 (Let's Encrypt)
 - Email SMTP: $10-20/ay
 
-### **Toplam Aylık Maliyet: ~$40-60**
+### **Toplam Aylık Maliyet: ~62.5 $ - 102.5 $ arası**
 
 ## 🎓 Eğitim ve Destek
 
